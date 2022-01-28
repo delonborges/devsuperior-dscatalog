@@ -1,14 +1,18 @@
 package com.delonborges.dscatalog.entities;
 
-import java.io.Serial;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
 
+@Entity
+@Table(name = "tb_category")
 public class Category implements Serializable {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
+    private static final AtomicLong serialVersionUID = new AtomicLong(1L);
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 

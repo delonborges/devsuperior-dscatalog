@@ -3,7 +3,6 @@ package com.delonborges.dscatalog.entities;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Entity
 @Table(name = "tb_category")

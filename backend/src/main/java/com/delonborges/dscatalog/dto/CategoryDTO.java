@@ -3,11 +3,10 @@ package com.delonborges.dscatalog.dto;
 import com.delonborges.dscatalog.entities.Category;
 
 import java.io.Serializable;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class CategoryDTO implements Serializable {
 
-    private static final AtomicLong serialVersionUID = new AtomicLong(1L);
+    private static final long serialVersionUID = 1L;
 
     private Long id;
     private String name;

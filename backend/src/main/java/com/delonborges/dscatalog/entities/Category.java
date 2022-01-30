@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Table(name = "tb_category")
 public class Category implements Serializable {
 
-    private static final AtomicLong serialVersionUID = new AtomicLong(1L);
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

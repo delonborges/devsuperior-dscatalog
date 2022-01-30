@@ -3,11 +3,10 @@ package com.delonborges.dscatalog.resources;
 import com.delonborges.dscatalog.dto.CategoryDTO;
 import com.delonborges.dscatalog.services.CategoryService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -22,13 +21,20 @@ public class CategoryResources {
 
     @GetMapping
     public ResponseEntity<List<CategoryDTO>> findAll() {
-        List<CategoryDTO> list = categoryService.findAll();
-        return ResponseEntity.ok().body(list);
+        List<CategoryDTO> dtoList = categoryService.findAll();
+        return ResponseEntity.ok().body(dtoList);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<CategoryDTO> findById(@PathVariable Long id) {
-        CategoryDTO item = categoryService.findById(id);
-        return ResponseEntity.ok().body(item);
+        CategoryDTO dtoItem = categoryService.findById(id);
+        return ResponseEntity.ok().body(dtoItem);
+    }
+
+    @PostMapping
+    public ResponseEntity<CategoryDTO> insert(@RequestBody CategoryDTO dtoItem) {
+        dtoItem = categoryService.insert(dtoItem);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dtoItem.getId()).toUri();
+        return ResponseEntity.created(uri).body(dtoItem);
     }
 }

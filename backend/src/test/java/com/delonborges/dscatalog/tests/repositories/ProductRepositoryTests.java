@@ -3,7 +3,6 @@ package com.delonborges.dscatalog.tests.repositories;
 import com.delonborges.dscatalog.entities.Product;
 import com.delonborges.dscatalog.factory.ProductFactory;
 import com.delonborges.dscatalog.repositories.ProductRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 public class ProductRepositoryTests {
@@ -35,14 +36,14 @@ public class ProductRepositoryTests {
     public void findByIdShouldReturnANonEmptyOptionalObjectWhenIdExists() {
         Optional<Product> result = productRepository.findById(existingId);
 
-        Assertions.assertTrue(result.isPresent());
+        assertTrue(result.isPresent());
     }
 
     @Test
-    public void findByIdShouldReturnAnEmptyOptionalObjectWhenIdDoesNotExists() {
+    public void findByIdShouldReturnAnEmptyOptionalObjectWhenIdDoesNotExist() {
         Optional<Product> result = productRepository.findById(notExistingId);
 
-        Assertions.assertTrue(result.isEmpty());
+        assertTrue(result.isEmpty());
     }
 
     @Test
@@ -50,8 +51,8 @@ public class ProductRepositoryTests {
         product.setId(null);
         product = productRepository.save(product);
 
-        Assertions.assertNotNull(product.getId());
-        Assertions.assertEquals(countTotalProducts + 1, product.getId());
+        assertNotNull(product.getId());
+        assertEquals(countTotalProducts + 1, product.getId());
     }
 
     @Test
@@ -59,12 +60,12 @@ public class ProductRepositoryTests {
         productRepository.deleteById(existingId);
         Optional<Product> result = productRepository.findById(existingId);
 
-        Assertions.assertEquals(result, Optional.empty());
+        assertEquals(result, Optional.empty());
     }
 
     @Test
-    public void deleteShouldThrowEmptyResultDataAccessExceptionWhenIdDoesNotExists() {
-        Assertions.assertThrows(EmptyResultDataAccessException.class, () -> {
+    public void deleteShouldThrowEmptyResultDataAccessExceptionWhenIdDoesNotExist() {
+        assertThrows(EmptyResultDataAccessException.class, () -> {
             productRepository.deleteById(notExistingId);
         });
     }

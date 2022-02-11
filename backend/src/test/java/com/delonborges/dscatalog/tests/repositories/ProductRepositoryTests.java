@@ -20,14 +20,14 @@ public class ProductRepositoryTests {
     private ProductRepository productRepository;
 
     private long existingId;
-    private long notExistingId;
+    private long nonExistingId;
     private Product product;
     private int countTotalProducts;
 
     @BeforeEach
     public void setUp() {
         existingId = 1L;
-        notExistingId = 26L;
+        nonExistingId = 26L;
         product = ProductFactory.createProductWithCategory();
         countTotalProducts = 25;
     }
@@ -41,7 +41,7 @@ public class ProductRepositoryTests {
 
     @Test
     public void findByIdShouldReturnAnEmptyOptionalObjectWhenIdDoesNotExist() {
-        Optional<Product> result = productRepository.findById(notExistingId);
+        Optional<Product> result = productRepository.findById(nonExistingId);
 
         assertTrue(result.isEmpty());
     }
@@ -66,7 +66,7 @@ public class ProductRepositoryTests {
     @Test
     public void deleteShouldThrowEmptyResultDataAccessExceptionWhenIdDoesNotExist() {
         assertThrows(EmptyResultDataAccessException.class, () -> {
-            productRepository.deleteById(notExistingId);
+            productRepository.deleteById(nonExistingId);
         });
     }
 }

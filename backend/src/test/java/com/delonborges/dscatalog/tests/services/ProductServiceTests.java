@@ -1,8 +1,12 @@
 package com.delonborges.dscatalog.tests.services;
 
 import com.delonborges.dscatalog.dto.ProductDTO;
+import com.delonborges.dscatalog.entities.Category;
 import com.delonborges.dscatalog.entities.Product;
+import com.delonborges.dscatalog.factory.CategoryFactory;
+import com.delonborges.dscatalog.factory.ProductDTOFactory;
 import com.delonborges.dscatalog.factory.ProductFactory;
+import com.delonborges.dscatalog.repositories.CategoryRepository;
 import com.delonborges.dscatalog.repositories.ProductRepository;
 import com.delonborges.dscatalog.services.ProductService;
 import com.delonborges.dscatalog.services.exceptions.DatabaseIntegrityViolationException;
@@ -21,6 +25,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,11 +40,14 @@ public class ProductServiceTests {
 
     @Mock
     private ProductRepository productRepository;
+    @Mock
+    private CategoryRepository categoryRepository;
 
     private long existingId;
     private long nonExistingId;
     private long dependentId;
     private Pageable pageable;
+    private ProductDTO productDTO;
 
     @BeforeEach
     public void setUp() {
@@ -47,14 +55,25 @@ public class ProductServiceTests {
         nonExistingId = 2L;
         dependentId = 3L;
         pageable = PageRequest.of(0, 10);
+        productDTO = ProductDTOFactory.createProductDTOWithCategory();
 
         Product product = ProductFactory.createProductWithCategory();
+        Category category = CategoryFactory.createCategory();
+
         PageImpl<Product> page = new PageImpl<>(List.of(product));
 
         when(productRepository.findAll((Pageable) ArgumentMatchers.any())).thenReturn(page);
-        when(productRepository.save(ArgumentMatchers.any())).thenReturn(product);
+
         when(productRepository.findById(existingId)).thenReturn(Optional.of(product));
         when(productRepository.findById(nonExistingId)).thenReturn(Optional.empty());
+
+        when(productRepository.getOne(existingId)).thenReturn(product);
+        when(productRepository.getOne(nonExistingId)).thenThrow(EntityNotFoundException.class);
+
+        when(categoryRepository.getOne(existingId)).thenReturn(category);
+        when(categoryRepository.getOne(nonExistingId)).thenThrow(EntityNotFoundException.class);
+
+        when(productRepository.save(ArgumentMatchers.any())).thenReturn(product);
 
         doNothing().when(productRepository).deleteById(existingId);
         doThrow(EmptyResultDataAccessException.class).when(productRepository).deleteById(nonExistingId);
@@ -67,6 +86,39 @@ public class ProductServiceTests {
 
         assertNotNull(result);
         verify(productRepository, times(1)).findAll(pageable);
+    }
+
+    @Test
+    public void findByIdShouldReturnDTOWhenIdExists() {
+        ProductDTO result = productService.findById(existingId);
+
+        assertNotNull(result);
+        verify(productRepository).findById(existingId);
+    }
+
+    @Test
+    public void findByIdShouldThrowExceptionWhenIdDoesNotExist() {
+        assertThrows(ResourceNotFoundException.class, () -> {
+            productService.findById(nonExistingId);
+        });
+        verify(productRepository).findById(nonExistingId);
+    }
+
+    @Test
+    public void updateShouldReturnDTOWhenIdExists() {
+        ProductDTO result = productService.update(existingId, productDTO);
+
+        assertNotNull(result);
+        verify(productRepository).getOne(existingId);
+        verify(categoryRepository).getOne(existingId);
+    }
+
+    @Test
+    public void updateShouldThrowExceptionWhenIdDoesNotExist() {
+        assertThrows(ResourceNotFoundException.class, () -> {
+            productService.update(nonExistingId, productDTO);
+        });
+        verify(productRepository).getOne(nonExistingId);
     }
 
     @Test

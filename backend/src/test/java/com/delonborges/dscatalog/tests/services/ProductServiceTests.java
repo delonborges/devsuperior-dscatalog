@@ -50,7 +50,7 @@ public class ProductServiceTests {
     private ProductDTO productDTO;
 
     @BeforeEach
-    public void setUp() {
+    protected void setUp() {
         existingId = 1L;
         nonExistingId = 2L;
         dependentId = 3L;
@@ -98,9 +98,7 @@ public class ProductServiceTests {
 
     @Test
     public void findByIdShouldThrowExceptionWhenIdDoesNotExist() {
-        assertThrows(ResourceNotFoundException.class, () -> {
-            productService.findById(nonExistingId);
-        });
+        assertThrows(ResourceNotFoundException.class, () -> productService.findById(nonExistingId));
         verify(productRepository).findById(nonExistingId);
     }
 
@@ -115,33 +113,25 @@ public class ProductServiceTests {
 
     @Test
     public void updateShouldThrowExceptionWhenIdDoesNotExist() {
-        assertThrows(ResourceNotFoundException.class, () -> {
-            productService.update(nonExistingId, productDTO);
-        });
+        assertThrows(ResourceNotFoundException.class, () -> productService.update(nonExistingId, productDTO));
         verify(productRepository).getOne(nonExistingId);
     }
 
     @Test
     public void deleteShouldDoNothingWhenIdExists() {
-        assertDoesNotThrow(() -> {
-            productService.delete(existingId);
-        });
+        assertDoesNotThrow(() -> productService.delete(existingId));
         verify(productRepository, times(1)).deleteById(existingId);
     }
 
     @Test
     public void deleteShouldThrowExceptionWhenIdDoesNotExist() {
-        assertThrows(ResourceNotFoundException.class, () -> {
-            productService.delete(nonExistingId);
-        });
+        assertThrows(ResourceNotFoundException.class, () -> productService.delete(nonExistingId));
         verify(productRepository, times(1)).deleteById(nonExistingId);
     }
 
     @Test
     public void deleteShouldThrowExceptionWhenIdIsDependent() {
-        assertThrows(DatabaseIntegrityViolationException.class, () -> {
-            productService.delete(dependentId);
-        });
+        assertThrows(DatabaseIntegrityViolationException.class, () -> productService.delete(dependentId));
         verify(productRepository, times(1)).deleteById(dependentId);
     }
 }

@@ -2,7 +2,7 @@ package com.delonborges.dscatalog.tests.resources;
 
 import com.delonborges.dscatalog.dto.ProductDTO;
 import com.delonborges.dscatalog.factory.ProductDTOFactory;
-import com.delonborges.dscatalog.resources.ProductResources;
+import com.delonborges.dscatalog.resources.ProductResource;
 import com.delonborges.dscatalog.services.ProductService;
 import com.delonborges.dscatalog.services.exceptions.DatabaseIntegrityViolationException;
 import com.delonborges.dscatalog.services.exceptions.ResourceNotFoundException;
@@ -26,8 +26,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ProductResources.class)
-public class ProductResourceTests {
+@WebMvcTest(ProductResource.class)
+public class ProductResourceUnitTests {
 
     @Autowired
     private MockMvc mockMvc;

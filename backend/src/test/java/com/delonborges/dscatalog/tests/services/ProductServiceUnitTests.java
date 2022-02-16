@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
-public class ProductServiceTests {
+public class ProductServiceUnitTests {
 
     @InjectMocks
     private ProductService productService;

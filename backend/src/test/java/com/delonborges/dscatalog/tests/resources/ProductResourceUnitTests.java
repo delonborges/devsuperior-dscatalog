@@ -44,7 +44,7 @@ public class ProductResourceUnitTests {
     private String jsonBody;
 
     @BeforeEach
-    protected void setUp() throws JsonProcessingException {
+    protected void setUp() throws Exception {
         existingId = 1L;
         nonExistingId = 2L;
         dependentId = 3L;

@@ -31,7 +31,6 @@ public class ProductServiceIntegrationTests {
     private Integer firstPage;
     private Integer totalPages;
     private Integer validPageSize;
-    private String sortMethod;
     private PageRequest validPageRequest;
     private PageRequest invalidPageRequest;
     private PageRequest sortByNamePageRequest;

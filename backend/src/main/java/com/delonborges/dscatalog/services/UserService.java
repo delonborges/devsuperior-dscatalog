@@ -1,5 +1,6 @@
 package com.delonborges.dscatalog.services;
 
+import com.delonborges.dscatalog.dto.InsertUserDTO;
 import com.delonborges.dscatalog.dto.RoleDTO;
 import com.delonborges.dscatalog.dto.UserDTO;
 import com.delonborges.dscatalog.entities.Role;
@@ -12,6 +13,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,10 +25,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional(readOnly = true)
@@ -43,9 +47,10 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO insert(UserDTO dtoItem) {
+    public UserDTO insert(InsertUserDTO dtoItem) {
         User entity = new User();
         dtoToEntity(dtoItem, entity);
+        entity.setPassword(passwordEncoder.encode(dtoItem.getPassword()));
         entity = userRepository.save(entity);
         return new UserDTO(entity);
     }

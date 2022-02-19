@@ -24,7 +24,7 @@ public class Product implements Serializable {
     private String imgUrl;
 
     @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
-    private Instant moment;
+    private Instant date;
 
     @ManyToMany
     @JoinTable(
@@ -37,13 +37,13 @@ public class Product implements Serializable {
     public Product() {
     }
 
-    public Product(Long id, String name, String description, Double price, String imgUrl, Instant moment) {
+    public Product(Long id, String name, String description, Double price, String imgUrl, Instant date) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.imgUrl = imgUrl;
-        this.moment = moment;
+        this.date = date;
     }
 
     public Long getId() {
@@ -86,12 +86,12 @@ public class Product implements Serializable {
         this.imgUrl = imgUrl;
     }
 
-    public Instant getMoment() {
-        return moment;
+    public Instant getDate() {
+        return date;
     }
 
-    public void setMoment(Instant moment) {
-        this.moment = moment;
+    public void setDate(Instant date) {
+        this.date = date;
     }
 
     public Set<Category> getCategories() {

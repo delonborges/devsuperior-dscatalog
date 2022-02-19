@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -33,14 +34,14 @@ public class ProductResource {
     }
 
     @PostMapping
-    public ResponseEntity<ProductDTO> insert(@RequestBody ProductDTO dtoItem) {
+    public ResponseEntity<ProductDTO> insert(@Valid @RequestBody ProductDTO dtoItem) {
         dtoItem = productService.insert(dtoItem);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dtoItem.getId()).toUri();
         return ResponseEntity.created(uri).body(dtoItem);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ProductDTO> update(@PathVariable Long id, @RequestBody ProductDTO dtoItem) {
+    public ResponseEntity<ProductDTO> update(@PathVariable Long id,@Valid @RequestBody ProductDTO dtoItem) {
         dtoItem = productService.update(id, dtoItem);
         return ResponseEntity.ok().body(dtoItem);
     }

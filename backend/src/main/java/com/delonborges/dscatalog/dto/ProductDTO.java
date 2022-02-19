@@ -3,6 +3,10 @@ package com.delonborges.dscatalog.dto;
 import com.delonborges.dscatalog.entities.Category;
 import com.delonborges.dscatalog.entities.Product;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -14,24 +18,29 @@ public class ProductDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
+    @NotBlank(message = "Required field")
     private String name;
+    @NotBlank(message = "Required field")
+    @Size(min = 20, message = "Description must have more than 20 characters")
     private String description;
+    @Positive(message = "Price must be positive")
     private Double price;
     private String imgUrl;
-    private Instant moment;
+    @PastOrPresent(message = "Date cannot be in the future")
+    private Instant date;
 
     private List<CategoryDTO> categories = new ArrayList<>();
 
     public ProductDTO() {
     }
 
-    public ProductDTO(Long id, String name, String description, Double price, String imgUrl, Instant moment) {
+    public ProductDTO(Long id, String name, String description, Double price, String imgUrl, Instant date) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.imgUrl = imgUrl;
-        this.moment = moment;
+        this.date = date;
     }
 
     public ProductDTO(Product entity) {
@@ -40,7 +49,7 @@ public class ProductDTO implements Serializable {
         description = entity.getDescription();
         price = entity.getPrice();
         imgUrl = entity.getImgUrl();
-        moment = entity.getMoment();
+        date = entity.getDate();
     }
 
     public ProductDTO(Product entity, Set<Category> categories) {
@@ -88,12 +97,12 @@ public class ProductDTO implements Serializable {
         this.imgUrl = imgUrl;
     }
 
-    public Instant getMoment() {
-        return moment;
+    public Instant getDate() {
+        return date;
     }
 
-    public void setMoment(Instant moment) {
-        this.moment = moment;
+    public void setDate(Instant date) {
+        this.date = date;
     }
 
     public List<CategoryDTO> getCategories() {

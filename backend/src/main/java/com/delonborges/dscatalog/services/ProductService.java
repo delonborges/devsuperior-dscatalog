@@ -77,7 +77,7 @@ public class ProductService {
         entity.setDescription(dtoItem.getDescription());
         entity.setPrice(dtoItem.getPrice());
         entity.setImgUrl(dtoItem.getImgUrl());
-        entity.setMoment(dtoItem.getMoment());
+        entity.setDate(dtoItem.getDate());
 
         entity.getCategories().clear();
 

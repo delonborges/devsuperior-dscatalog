@@ -1,6 +1,7 @@
 package com.delonborges.dscatalog.resources;
 
 import com.delonborges.dscatalog.dto.InsertUserDTO;
+import com.delonborges.dscatalog.dto.UpdateUserDTO;
 import com.delonborges.dscatalog.dto.UserDTO;
 import com.delonborges.dscatalog.services.UserService;
 import org.springframework.data.domain.Page;
@@ -42,7 +43,7 @@ public class UserResource {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<UserDTO> update(@PathVariable Long id,@Valid @RequestBody InsertUserDTO dtoItem) {
+    public ResponseEntity<UserDTO> update(@PathVariable Long id,@Valid @RequestBody UpdateUserDTO dtoItem) {
         UserDTO userDTO = userService.update(id, dtoItem);
         return ResponseEntity.ok().body(userDTO);
     }

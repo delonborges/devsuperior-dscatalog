@@ -2,6 +2,7 @@ package com.delonborges.dscatalog.services;
 
 import com.delonborges.dscatalog.dto.InsertUserDTO;
 import com.delonborges.dscatalog.dto.RoleDTO;
+import com.delonborges.dscatalog.dto.UpdateUserDTO;
 import com.delonborges.dscatalog.dto.UserDTO;
 import com.delonborges.dscatalog.entities.Role;
 import com.delonborges.dscatalog.entities.User;
@@ -56,7 +57,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO update(Long id, UserDTO dtoItem) {
+    public UserDTO update(Long id, UpdateUserDTO dtoItem) {
         try {
             User entity = userRepository.getOne(id);
             dtoToEntity(dtoItem, entity);

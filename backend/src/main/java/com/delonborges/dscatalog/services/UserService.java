@@ -10,10 +10,15 @@ import com.delonborges.dscatalog.repositories.RoleRepository;
 import com.delonborges.dscatalog.repositories.UserRepository;
 import com.delonborges.dscatalog.services.exceptions.DatabaseIntegrityViolationException;
 import com.delonborges.dscatalog.services.exceptions.ResourceNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +27,9 @@ import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -76,6 +83,17 @@ public class UserService {
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseIntegrityViolationException("Integrity violation");
         }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(userEmail);
+        if (user == null) {
+            logger.error("User not found: " + userEmail);
+            throw new UsernameNotFoundException("Email not found");
+        }
+        logger.info("User found: " + userEmail);
+        return user;
     }
 
     private void dtoToEntity(UserDTO dtoItem, User entity) {

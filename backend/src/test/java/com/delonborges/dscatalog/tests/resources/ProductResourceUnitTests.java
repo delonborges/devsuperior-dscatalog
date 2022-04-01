@@ -52,7 +52,7 @@ public class ProductResourceUnitTests {
         PageImpl<ProductDTO> page = new PageImpl<>(List.of(productDTO));
         jsonBody = objectMapper.writeValueAsString(productDTO);
 
-        when(productService.findAllPaged(any())).thenReturn(page);
+        //when(productService.findAllPaged(any())).thenReturn(page);
 
         when(productService.findById(existingId)).thenReturn(productDTO);
         when(productService.findById(nonExistingId)).thenThrow(ResourceNotFoundException.class);

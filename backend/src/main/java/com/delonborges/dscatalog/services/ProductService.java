@@ -30,8 +30,9 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductDTO> findAllPaged(Pageable pageable) {
-        Page<Product> page = productRepository.findAll(pageable);
+    public Page<ProductDTO> findAllPaged(Long categoryId, Pageable pageable) {
+        Category categories = (categoryId == 0) ? null : categoryRepository.getOne(categoryId);
+        Page<Product> page = productRepository.findAllPaged(categories, pageable);
         return page.map(ProductDTO::new);
     }
 
@@ -79,11 +80,13 @@ public class ProductService {
         entity.setImgUrl(dtoItem.getImgUrl());
         entity.setDate(dtoItem.getDate());
 
-        entity.getCategories().clear();
+        entity.getCategories()
+              .clear();
 
         for (CategoryDTO categorias : dtoItem.getCategories()) {
             Category category = categoryRepository.getOne(categorias.getId());
-            entity.getCategories().add(category);
+            entity.getCategories()
+                  .add(category);
         }
     }
 }

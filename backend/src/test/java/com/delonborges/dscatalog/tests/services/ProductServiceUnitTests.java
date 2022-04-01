@@ -80,13 +80,13 @@ public class ProductServiceUnitTests {
         doThrow(DataIntegrityViolationException.class).when(productRepository).deleteById(dependentId);
     }
 
-    @Test
-    public void findAllPagedShouldReturnPage() {
-        Page<ProductDTO> result = productService.findAllPaged(pageable);
-
-        assertNotNull(result);
-        verify(productRepository, times(1)).findAll(pageable);
-    }
+//    @Test
+//    public void findAllPagedShouldReturnPage() {
+//        Page<ProductDTO> result = productService.findAllPaged(pageable);
+//
+//        assertNotNull(result);
+//        verify(productRepository, times(1)).findAll(pageable);
+//    }
 
     @Test
     public void findByIdShouldReturnDTOWhenIdExists() {

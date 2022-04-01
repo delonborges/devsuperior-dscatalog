@@ -22,33 +22,43 @@ public class ProductResource {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ProductDTO>> findAllPaged(Pageable pageable) {
-        Page<ProductDTO> dtoList = productService.findAllPaged(pageable);
-        return ResponseEntity.ok().body(dtoList);
+    public ResponseEntity<Page<ProductDTO>> findAllPaged(@RequestParam(value = "categoryId",
+                                                                       defaultValue = "0") Long categoryId,
+                                                         Pageable pageable) {
+        Page<ProductDTO> dtoList = productService.findAllPaged(categoryId, pageable);
+        return ResponseEntity.ok()
+                             .body(dtoList);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<ProductDTO> findById(@PathVariable Long id) {
         ProductDTO dtoItem = productService.findById(id);
-        return ResponseEntity.ok().body(dtoItem);
+        return ResponseEntity.ok()
+                             .body(dtoItem);
     }
 
     @PostMapping
     public ResponseEntity<ProductDTO> insert(@Valid @RequestBody ProductDTO dtoItem) {
         dtoItem = productService.insert(dtoItem);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dtoItem.getId()).toUri();
-        return ResponseEntity.created(uri).body(dtoItem);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                                             .path("/{id}")
+                                             .buildAndExpand(dtoItem.getId())
+                                             .toUri();
+        return ResponseEntity.created(uri)
+                             .body(dtoItem);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ProductDTO> update(@PathVariable Long id,@Valid @RequestBody ProductDTO dtoItem) {
+    public ResponseEntity<ProductDTO> update(@PathVariable Long id, @Valid @RequestBody ProductDTO dtoItem) {
         dtoItem = productService.update(id, dtoItem);
-        return ResponseEntity.ok().body(dtoItem);
+        return ResponseEntity.ok()
+                             .body(dtoItem);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         productService.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent()
+                             .build();
     }
 }

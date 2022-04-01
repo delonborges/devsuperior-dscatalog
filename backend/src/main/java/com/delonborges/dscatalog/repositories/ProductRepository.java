@@ -11,10 +11,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @Query("SELECT p "
+    @Query("SELECT DISTINCT p "
            + "FROM Product p "
            + "INNER JOIN p.categories c "
-           + "WHERE :category "
-           + "IN c")
+           + "WHERE :category IS NULL "
+           + "OR :category IN c")
     Page<Product> findAllPaged(Category category, Pageable pageable);
 }

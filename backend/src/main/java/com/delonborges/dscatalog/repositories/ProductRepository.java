@@ -8,13 +8,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT DISTINCT p "
            + "FROM Product p "
            + "INNER JOIN p.categories c "
-           + "WHERE (:category IS NULL OR :category IN c) "
-           + "AND (LOWER(p.name) LIKE LOWER(CONCAT('%',:name,'%')))")
-    Page<Product> findAllPaged(Category category, String name, Pageable pageable);
+           + "WHERE (COALESCE(:categories) IS NULL OR c IN :categories) "
+           + "AND (:name = '' OR LOWER(p.name) LIKE LOWER(CONCAT('%',:name,'%')))")
+    Page<Product> findAllPaged(List<Category> categories, String name, Pageable pageable);
 }

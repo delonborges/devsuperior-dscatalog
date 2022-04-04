@@ -64,6 +64,8 @@ public class ProductServiceUnitTests {
 
         when(productRepository.findAll((Pageable) ArgumentMatchers.any())).thenReturn(page);
 
+        when(productRepository.findAllPaged(any(), any(), any())).thenReturn(page);
+
         when(productRepository.findById(existingId)).thenReturn(Optional.of(product));
         when(productRepository.findById(nonExistingId)).thenReturn(Optional.empty());
 
@@ -75,18 +77,20 @@ public class ProductServiceUnitTests {
 
         when(productRepository.save(ArgumentMatchers.any())).thenReturn(product);
 
-        doNothing().when(productRepository).deleteById(existingId);
-        doThrow(EmptyResultDataAccessException.class).when(productRepository).deleteById(nonExistingId);
-        doThrow(DataIntegrityViolationException.class).when(productRepository).deleteById(dependentId);
+        doNothing().when(productRepository)
+                   .deleteById(existingId);
+        doThrow(EmptyResultDataAccessException.class).when(productRepository)
+                                                     .deleteById(nonExistingId);
+        doThrow(DataIntegrityViolationException.class).when(productRepository)
+                                                      .deleteById(dependentId);
     }
 
-//    @Test
-//    public void findAllPagedShouldReturnPage() {
-//        Page<ProductDTO> result = productService.findAllPaged(pageable);
-//
-//        assertNotNull(result);
-//        verify(productRepository, times(1)).findAll(pageable);
-//    }
+    @Test
+    public void findAllPagedShouldReturnPage() {
+        Page<ProductDTO> result = productService.findAllPaged(0L, "", pageable);
+
+        assertNotNull(result);
+    }
 
     @Test
     public void findByIdShouldReturnDTOWhenIdExists() {

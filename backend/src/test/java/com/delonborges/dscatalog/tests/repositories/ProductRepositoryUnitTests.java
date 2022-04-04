@@ -65,8 +65,6 @@ public class ProductRepositoryUnitTests {
 
     @Test
     public void deleteShouldThrowEmptyResultDataAccessExceptionWhenIdDoesNotExist() {
-        assertThrows(EmptyResultDataAccessException.class, () -> {
-            productRepository.deleteById(nonExistingId);
-        });
+        assertThrows(EmptyResultDataAccessException.class, () -> productRepository.deleteById(nonExistingId));
     }
 }

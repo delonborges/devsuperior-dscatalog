@@ -48,35 +48,41 @@ public class ProductServiceIntegrationTests {
         sortByNamePageRequest = PageRequest.of(firstPage, validPageSize, Sort.by("name"));
     }
 
-//    @Test
-//    public void findAllPagedShouldReturnPageWhenPageExists() {
-//        Page<ProductDTO> result = productService.findAllPaged(validPageRequest);
-//
-//        assertFalse(result.isEmpty());
-//        assertEquals(firstPage, result.getNumber());
-//        assertEquals(totalPages, result.getTotalPages());
-//        assertEquals(validPageSize, result.getSize());
-//        assertEquals(totalProducts, result.getTotalElements());
-//    }
-//
-//    @Test
-//    public void findAllPagedShouldReturnEmptyWhenPageDoesNotExist() {
-//        Page<ProductDTO> result = productService.findAllPaged(invalidPageRequest);
-//
-//        assertTrue(result.isEmpty());
-//    }
-//
-//    @Test
-//    public void findAllPagedShouldReturnSortedPageWhenSortByName() {
-//        Page<ProductDTO> result = productService.findAllPaged(sortByNamePageRequest);
-//
-//        String firstItem = "MacBook Pro";
-//        String lastItem = "PC Gamer Hera";
-//
-//        assertFalse(result.isEmpty());
-//        assertEquals(firstItem, result.getContent().get(0).getName());
-//        assertEquals(lastItem, result.getContent().get(9).getName());
-//    }
+    @Test
+    public void findAllPagedShouldReturnPageWhenPageExists() {
+        Page<ProductDTO> result = productService.findAllPaged(0L, "", validPageRequest);
+
+        assertFalse(result.isEmpty());
+        assertEquals(firstPage, result.getNumber());
+        assertEquals(totalPages, result.getTotalPages());
+        assertEquals(validPageSize, result.getSize());
+        assertEquals(totalProducts, result.getTotalElements());
+    }
+
+    @Test
+    public void findAllPagedShouldReturnEmptyWhenPageDoesNotExist() {
+        Page<ProductDTO> result = productService.findAllPaged(0L, "", invalidPageRequest);
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void findAllPagedShouldReturnSortedPageWhenSortByName() {
+        Page<ProductDTO> result = productService.findAllPaged(0L, "", sortByNamePageRequest);
+
+        String firstItem = "MacBook Pro";
+        String lastItem = "PC Gamer Hera";
+
+        assertFalse(result.isEmpty());
+        assertEquals(firstItem,
+                     result.getContent()
+                           .get(0)
+                           .getName());
+        assertEquals(lastItem,
+                     result.getContent()
+                           .get(9)
+                           .getName());
+    }
 
     @Test
     public void deleteShouldDeleteResourceWhenIdExists() {

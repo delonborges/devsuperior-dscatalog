@@ -2,6 +2,7 @@ package com.delonborges.dscatalog.tests.resources;
 
 import com.delonborges.dscatalog.dto.ProductDTO;
 import com.delonborges.dscatalog.factory.ProductDTOFactory;
+import com.delonborges.dscatalog.utils.TokenUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,11 +29,16 @@ public class ProductResourceIntegrationTests {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private TokenUtil tokenUtil;
+
     private Long existingId;
     private Long nonExistingId;
     private Long totalProducts;
     private ProductDTO productDTO;
     private String jsonBody;
+    private String username;
+    private String password;
 
     @BeforeEach
     protected void setUp() throws Exception {
@@ -41,6 +47,8 @@ public class ProductResourceIntegrationTests {
         totalProducts = 25L;
         productDTO = ProductDTOFactory.createProductDTOWithCategory();
         jsonBody = objectMapper.writeValueAsString(productDTO);
+        username = "maria@gmail.com";
+        password = "123456";
     }
 
     @Test
@@ -48,36 +56,40 @@ public class ProductResourceIntegrationTests {
         String firstItem = "MacBook Pro";
         String lastItem = "PC Gamer Hera";
 
-        mockMvc.perform(get("/products?page=0&size=10&sort=name,asc")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.totalElements").value(totalProducts))
-                .andExpect(jsonPath("$.content").exists())
-                .andExpect(jsonPath("$.content[0].name").value(firstItem))
-                .andExpect(jsonPath("$.content[9].name").value(lastItem));
+        mockMvc.perform(get("/products?page=0&size=10&sort=name,asc").accept(MediaType.APPLICATION_JSON))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.totalElements").value(totalProducts))
+               .andExpect(jsonPath("$.content").exists())
+               .andExpect(jsonPath("$.content[0].name").value(firstItem))
+               .andExpect(jsonPath("$.content[9].name").value(lastItem));
     }
 
     @Test
     public void updateShouldReturnProductDTOWhenIdExists() throws Exception {
+
+        String accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
+
         String productName = productDTO.getName();
         Double productPrice = productDTO.getPrice();
 
-        mockMvc.perform(put("/products/{id}", existingId)
-                        .content(jsonBody)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(existingId))
-                .andExpect(jsonPath("$.name").value(productName))
-                .andExpect(jsonPath("$.price").value(productPrice));
+        mockMvc.perform(put("/products/{id}", existingId).header("Authorization", "Bearer " + accessToken)
+                                                         .content(jsonBody)
+                                                         .contentType(MediaType.APPLICATION_JSON)
+                                                         .accept(MediaType.APPLICATION_JSON))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.id").value(existingId))
+               .andExpect(jsonPath("$.name").value(productName))
+               .andExpect(jsonPath("$.price").value(productPrice));
     }
 
     @Test
     public void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
-        mockMvc.perform(put("/products/{id}", nonExistingId)
-                        .content(jsonBody)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+        String accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
+
+        mockMvc.perform(put("/products/{id}", nonExistingId).header("Authorization", "Bearer " + accessToken)
+                                                            .content(jsonBody)
+                                                            .contentType(MediaType.APPLICATION_JSON)
+                                                            .accept(MediaType.APPLICATION_JSON))
+               .andExpect(status().isNotFound());
     }
 }

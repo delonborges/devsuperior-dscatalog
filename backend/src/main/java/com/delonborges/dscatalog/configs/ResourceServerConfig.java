@@ -34,15 +34,23 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        if (Arrays.asList(environment.getActiveProfiles()).contains("test")) {
-            http.headers().frameOptions().disable();
+        if (Arrays.asList(environment.getActiveProfiles())
+                  .contains("test")) {
+            http.headers()
+                .frameOptions()
+                .disable();
         }
 
         http.authorizeRequests()
-                .antMatchers(PUBLIC).permitAll()
-                .antMatchers(HttpMethod.GET, RESTRICTED).permitAll()
-                .antMatchers(RESTRICTED).hasAnyRole("OPERATOR", "ADMIN")
-                .antMatchers(ADMIN).hasRole("ADMIN")
-                .anyRequest().authenticated();
+            .antMatchers(PUBLIC)
+            .permitAll()
+            .antMatchers(HttpMethod.GET, RESTRICTED)
+            .permitAll()
+            .antMatchers(RESTRICTED)
+            .hasAnyRole("OPERATOR", "ADMIN")
+            .antMatchers(ADMIN)
+            .hasRole("ADMIN")
+            .anyRequest()
+            .authenticated();
     }
 }

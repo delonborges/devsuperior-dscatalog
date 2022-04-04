@@ -38,13 +38,9 @@ public class TokenUtil {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"));
 
-        String resultString = result.andReturn()
-                                    .getResponse()
-                                    .getContentAsString();
+        String resultString = result.andReturn().getResponse().getContentAsString();
 
         JacksonJsonParser jsonParser = new JacksonJsonParser();
-        return jsonParser.parseMap(resultString)
-                         .get("access_token")
-                         .toString();
+        return jsonParser.parseMap(resultString).get("access_token").toString();
     }
 }

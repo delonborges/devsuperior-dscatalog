@@ -18,19 +18,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@Transactional
-public class ProductResourceIntegrationTests {
+@SpringBootTest @AutoConfigureMockMvc @Transactional public class ProductResourceIntegrationTests {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @Autowired private ObjectMapper objectMapper;
 
-    @Autowired
-    private TokenUtil tokenUtil;
+    @Autowired private TokenUtil tokenUtil;
 
     private Long existingId;
     private Long nonExistingId;
@@ -40,8 +34,7 @@ public class ProductResourceIntegrationTests {
     private String username;
     private String password;
 
-    @BeforeEach
-    protected void setUp() throws Exception {
+    @BeforeEach protected void setUp() throws Exception {
         existingId = 1L;
         nonExistingId = 26L;
         totalProducts = 25L;
@@ -51,8 +44,7 @@ public class ProductResourceIntegrationTests {
         password = "123456";
     }
 
-    @Test
-    public void findAllShouldReturnSortedPageWhenSortByName() throws Exception {
+    @Test public void findAllShouldReturnSortedPageWhenSortByName() throws Exception {
         String firstItem = "MacBook Pro";
         String lastItem = "PC Gamer Hera";
 
@@ -64,9 +56,7 @@ public class ProductResourceIntegrationTests {
                .andExpect(jsonPath("$.content[9].name").value(lastItem));
     }
 
-    @Test
-    public void updateShouldReturnProductDTOWhenIdExists() throws Exception {
-
+    @Test public void updateShouldReturnProductDTOWhenIdExists() throws Exception {
         String accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
 
         String productName = productDTO.getName();
@@ -82,8 +72,7 @@ public class ProductResourceIntegrationTests {
                .andExpect(jsonPath("$.price").value(productPrice));
     }
 
-    @Test
-    public void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
+    @Test public void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
         String accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
 
         mockMvc.perform(put("/products/{id}", nonExistingId).header("Authorization", "Bearer " + accessToken)

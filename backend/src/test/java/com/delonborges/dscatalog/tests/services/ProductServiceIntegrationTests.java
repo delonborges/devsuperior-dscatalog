@@ -15,15 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-@Transactional
-public class ProductServiceIntegrationTests {
+@SpringBootTest @Transactional public class ProductServiceIntegrationTests {
 
-    @Autowired
-    private ProductService productService;
+    @Autowired private ProductService productService;
 
-    @Autowired
-    private ProductRepository productRepository;
+    @Autowired private ProductRepository productRepository;
 
     private Long existingId;
     private Long nonExistingId;
@@ -35,8 +31,7 @@ public class ProductServiceIntegrationTests {
     private PageRequest invalidPageRequest;
     private PageRequest sortByNamePageRequest;
 
-    @BeforeEach
-    protected void setUp() {
+    @BeforeEach protected void setUp() {
         existingId = 1L;
         nonExistingId = 26L;
         totalProducts = 25L;
@@ -48,8 +43,7 @@ public class ProductServiceIntegrationTests {
         sortByNamePageRequest = PageRequest.of(firstPage, validPageSize, Sort.by("name"));
     }
 
-    @Test
-    public void findAllPagedShouldReturnPageWhenPageExists() {
+    @Test public void findAllPagedShouldReturnPageWhenPageExists() {
         Page<ProductDTO> result = productService.findAllPaged(0L, "", validPageRequest);
 
         assertFalse(result.isEmpty());
@@ -59,33 +53,24 @@ public class ProductServiceIntegrationTests {
         assertEquals(totalProducts, result.getTotalElements());
     }
 
-    @Test
-    public void findAllPagedShouldReturnEmptyWhenPageDoesNotExist() {
+    @Test public void findAllPagedShouldReturnEmptyWhenPageDoesNotExist() {
         Page<ProductDTO> result = productService.findAllPaged(0L, "", invalidPageRequest);
 
         assertTrue(result.isEmpty());
     }
 
-    @Test
-    public void findAllPagedShouldReturnSortedPageWhenSortByName() {
+    @Test public void findAllPagedShouldReturnSortedPageWhenSortByName() {
         Page<ProductDTO> result = productService.findAllPaged(0L, "", sortByNamePageRequest);
 
         String firstItem = "MacBook Pro";
         String lastItem = "PC Gamer Hera";
 
         assertFalse(result.isEmpty());
-        assertEquals(firstItem,
-                     result.getContent()
-                           .get(0)
-                           .getName());
-        assertEquals(lastItem,
-                     result.getContent()
-                           .get(9)
-                           .getName());
+        assertEquals(firstItem, result.getContent().get(0).getName());
+        assertEquals(lastItem, result.getContent().get(9).getName());
     }
 
-    @Test
-    public void deleteShouldDeleteResourceWhenIdExists() {
+    @Test public void deleteShouldDeleteResourceWhenIdExists() {
         productService.delete(existingId);
 
         Long expected = totalProducts - 1;
@@ -94,8 +79,7 @@ public class ProductServiceIntegrationTests {
         assertEquals(expected, actual);
     }
 
-    @Test
-    public void deleteShouldThrowExceptionWhenIdDoesNotExist() {
+    @Test public void deleteShouldThrowExceptionWhenIdDoesNotExist() {
         assertThrows(ResourceNotFoundException.class, () -> productService.delete(nonExistingId));
     }
 }

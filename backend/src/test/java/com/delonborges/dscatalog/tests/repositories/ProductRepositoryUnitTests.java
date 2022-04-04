@@ -13,41 +13,35 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest
-public class ProductRepositoryUnitTests {
+@DataJpaTest public class ProductRepositoryUnitTests {
 
-    @Autowired
-    private ProductRepository productRepository;
+    @Autowired private ProductRepository productRepository;
 
     private long existingId;
     private long nonExistingId;
     private Product product;
     private int countTotalProducts;
 
-    @BeforeEach
-    public void setUp() {
+    @BeforeEach public void setUp() {
         existingId = 1L;
         nonExistingId = 26L;
         product = ProductFactory.createProductWithCategory();
         countTotalProducts = 25;
     }
 
-    @Test
-    public void findByIdShouldReturnANonEmptyOptionalObjectWhenIdExists() {
+    @Test public void findByIdShouldReturnANonEmptyOptionalObjectWhenIdExists() {
         Optional<Product> result = productRepository.findById(existingId);
 
         assertTrue(result.isPresent());
     }
 
-    @Test
-    public void findByIdShouldReturnAnEmptyOptionalObjectWhenIdDoesNotExist() {
+    @Test public void findByIdShouldReturnAnEmptyOptionalObjectWhenIdDoesNotExist() {
         Optional<Product> result = productRepository.findById(nonExistingId);
 
         assertTrue(result.isEmpty());
     }
 
-    @Test
-    public void saveShouldPersistWhitAutoIncrementWhenIdIsNull() {
+    @Test public void saveShouldPersistWhitAutoIncrementWhenIdIsNull() {
         product.setId(null);
         product = productRepository.save(product);
 
@@ -55,16 +49,14 @@ public class ProductRepositoryUnitTests {
         assertEquals(countTotalProducts + 1, product.getId());
     }
 
-    @Test
-    public void deleteShouldDeleteObjectWhenIdExists() {
+    @Test public void deleteShouldDeleteObjectWhenIdExists() {
         productRepository.deleteById(existingId);
         Optional<Product> result = productRepository.findById(existingId);
 
         assertEquals(result, Optional.empty());
     }
 
-    @Test
-    public void deleteShouldThrowEmptyResultDataAccessExceptionWhenIdDoesNotExist() {
+    @Test public void deleteShouldThrowEmptyResultDataAccessExceptionWhenIdDoesNotExist() {
         assertThrows(EmptyResultDataAccessException.class, () -> productRepository.deleteById(nonExistingId));
     }
 }

@@ -7,7 +7,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: homolog
+    environment: hom
 
     env:
       AWS_REGION: ${{ secrets.AWS_REGION }}
